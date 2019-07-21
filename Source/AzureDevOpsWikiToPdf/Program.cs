@@ -1,0 +1,47 @@
+﻿using System;
+using System.IO;
+using System.Text;
+
+namespace AzureDevOpsWikiToPdf
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            if (args.Length <= 1 || !Directory.Exists(args[0]))
+            {
+                Console.WriteLine("第一引数にWikiディレクトリを第二引数に出力先フォルダを指定してください。");
+                return;
+            }
+
+            var source = args[0];
+            var dest = args[1];
+
+            if (!Directory.Exists(dest))
+                Directory.CreateDirectory(dest);
+
+
+            var wikiDirectory = WikiDirectory.Parse(source);
+            foreach (var wikiEntry in wikiDirectory.WikiEntries)
+            {
+                using var streamWriter = 
+                    new StreamWriter(
+                        Path.Combine(dest, wikiEntry.MarkdownName), 
+                        false, 
+                        new UTF8Encoding(false));
+                wikiEntry.Write(streamWriter);
+                streamWriter.Flush();
+            }
+            var catalog = new Catalog(wikiDirectory);
+
+            using var catalogWriter = 
+                new StreamWriter(
+                    Path.Combine(dest, "catalog.yml"),
+                    false,
+                    new UTF8Encoding(false));
+            catalog.Write(catalogWriter);
+
+            Console.WriteLine("Completed.");
+        }
+    }
+}
