@@ -8,6 +8,8 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.pdf
+
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -21,6 +23,7 @@ x64/
 x86/
 bld/
 [Bb]in/
+!azdowiki2pdf*/[Bb]in/
 [Oo]bj/
 [Ll]og/
 
