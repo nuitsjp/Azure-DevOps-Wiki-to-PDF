@@ -10,6 +10,6 @@ namespace AzureDevOpsWikiToPdf
         public abstract string ReViewName { get; }
         public abstract IReadOnlyList<IWikiEntry> WikiEntries { get; }
         public abstract void Write(TextWriter textWriter);
-        internal abstract void Write(TextWriter textWriter, string indent);
+        internal abstract void Write(TextWriter textWriter, int indent);
     }
 }

@@ -33,7 +33,7 @@
     <None Update="Wiki\.order">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Wiki\にばんめの章\にばんめの章.md">
+    <None Update="Wiki\にばんめの章.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Wiki\にばんめの章\にばんめの章の第一節.md">
@@ -48,7 +48,7 @@
     <None Update="Wiki\最初の章\だいにせつ.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Wiki\最初の章\最初の章.md">
+    <None Update="Wiki\最初の章.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Wiki\最初の章\第一節.md">
@@ -63,7 +63,7 @@
     <None Update="Wiki\最初の章\第三節\第一項.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Wiki\最初の章\第三節\第三節.md">
+    <None Update="Wiki\最初の章\第三節.md">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Wiki\最初の章\第三節\第三項.md">

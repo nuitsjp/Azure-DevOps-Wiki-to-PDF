@@ -10,11 +10,13 @@ namespace AzureDevOpsWikiToPdf
         private readonly DirectoryInfo _directoryInfo;
         private readonly List<WikiEntry> _wikiEntries = new List<WikiEntry>();
 
-        public WikiDirectory(DirectoryInfo directoryInfo)
+        private readonly WikiEntry _directoryWikiEntry;
+
+        private WikiDirectory(DirectoryInfo directoryInfo, WikiEntry directoryWikiEntry)
         {
             _directoryInfo = directoryInfo;
+            _directoryWikiEntry = directoryWikiEntry;
         }
-
         public override string FullName => _directoryInfo.FullName;
         public override string MarkdownName => $"{_directoryInfo.Name}.md";
         public override string ReViewName => $"{_directoryInfo.Name}.re";
@@ -22,22 +24,18 @@ namespace AzureDevOpsWikiToPdf
         public override IReadOnlyList<IWikiEntry> WikiEntries => _wikiEntries;
         public override void Write(TextWriter textWriter)
         {
-            Write(textWriter, string.Empty);
+            Write(textWriter, 0);
         }
 
-        internal override void Write(TextWriter textWriter, string indent)
+        internal override void Write(TextWriter textWriter, int indent)
         {
-            bool isFirstPage = true;
-            var childIndent = indent;
+            _directoryWikiEntry.Write(textWriter, indent);
+            textWriter.WriteLine();
+            var childIndent = indent + 1;
             foreach (var wikiEntry in _wikiEntries)
             {
                 wikiEntry.Write(textWriter, childIndent);
                 textWriter.WriteLine();
-                if (isFirstPage)
-                {
-                    childIndent = childIndent + "#";
-                    isFirstPage = false;
-                }
             }
         }
 
@@ -45,7 +43,7 @@ namespace AzureDevOpsWikiToPdf
 
         public static WikiDirectory Parse(string path)
         {
-            var wikiDirectory = new WikiDirectory(new DirectoryInfo(path));
+            var wikiDirectory = new WikiDirectory(new DirectoryInfo(path), new NullWikiFile());
             Parse(wikiDirectory);
             return wikiDirectory;
         }
@@ -66,6 +64,7 @@ namespace AzureDevOpsWikiToPdf
                     .Select(x => x.Name);
                 var files = wikiDirectory._directoryInfo
                     .GetFiles()
+                    .Where(x => x.Extension == ".md")
                     .Select(x => x.Name.Substring(0, x.Name.Length - x.Extension.Length));
 
                 children = directories.Union(files).OrderBy(x => x);
@@ -74,20 +73,41 @@ namespace AzureDevOpsWikiToPdf
             foreach (var child in children)
             {
                 var childPath = Path.Combine(wikiDirectory.FullName, child);
-                if (File.Exists($"{childPath}.md"))
+                if (Directory.Exists(childPath))
                 {
-                    wikiDirectory.AddWikiEntry(new WikiFile(new FileInfo($"{childPath}.md")));
-                }
-                else if (Directory.Exists(childPath))
-                {
-                    var childWikiDirectory = new WikiDirectory(new DirectoryInfo(childPath));
+                    var directoryWikiEntry =
+                        File.Exists($"{childPath}.md")
+                            ? new WikiFile(new FileInfo($"{childPath}.md"))
+                            : (WikiEntry)new NullWikiFile();
+
+                    var childWikiDirectory = 
+                        new WikiDirectory(new DirectoryInfo(childPath), directoryWikiEntry);
                     Parse(childWikiDirectory);
                     wikiDirectory.AddWikiEntry(childWikiDirectory);
+                }
+                else if (File.Exists($"{childPath}.md"))
+                {
+                    wikiDirectory.AddWikiEntry(new WikiFile(new FileInfo($"{childPath}.md")));
                 }
                 else
                 {
                     throw new InvalidOperationException($"{childPath} is not exists.");
                 }
+            }
+        }
+
+        internal class NullWikiFile : WikiEntry
+        {
+            public override string FullName { get; } = string.Empty;
+            public override string MarkdownName { get; } = string.Empty;
+            public override string ReViewName { get; } = string.Empty;
+            public override IReadOnlyList<IWikiEntry> WikiEntries { get; } = new List<IWikiEntry>();
+            public override void Write(TextWriter textWriter)
+            {
+            }
+
+            internal override void Write(TextWriter textWriter, int indent)
+            {
             }
         }
     }
