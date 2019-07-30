@@ -6,4 +6,8 @@
     <AssemblyName>AzureDevOpsWikiToPdf</AssemblyName>
     <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="YamlDotNet" Version="6.1.2" />
+  </ItemGroup>
 </Project>

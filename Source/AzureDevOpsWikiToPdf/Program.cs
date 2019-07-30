@@ -32,14 +32,20 @@ namespace AzureDevOpsWikiToPdf
                 wikiEntry.Write(streamWriter);
                 streamWriter.Flush();
             }
-            var catalog = new Catalog(wikiDirectory);
+            using var catalogReader =
+                new StreamReader(
+                    Path.Combine(source, "catalog-md.yml"),
+                    new UTF8Encoding(false));
+            var catalog = Catalog.Load(catalogReader);
+
+            catalog.Append(wikiDirectory);
 
             using var catalogWriter = 
                 new StreamWriter(
                     Path.Combine(dest, "catalog.yml"),
                     false,
                     new UTF8Encoding(false));
-            catalog.Write(catalogWriter);
+            catalog.SaveToReViewCatalog(catalogWriter);
 
             Console.WriteLine("Completed.");
         }
