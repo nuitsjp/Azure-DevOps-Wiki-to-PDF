@@ -36,8 +36,9 @@ namespace AzureDevOpsWikiToPdf
             var indentString = indentBuilder.ToString();
             var imagePath = imagePathBuilder.ToString();
 
-            foreach (var line in File.ReadAllLines(_fileInfo.FullName))
+            foreach (var original in File.ReadAllLines(_fileInfo.FullName))
             {
+                var line = original.Replace("<br>", "@<br>{}");
                 if (line.StartsWith("#"))
                 {
                     textWriter.WriteLine($"{indentString}{line}");

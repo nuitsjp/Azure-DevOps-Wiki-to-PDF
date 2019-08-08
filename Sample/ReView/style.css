@@ -66,7 +66,7 @@ p {
     line-height: 1.6;
 }
 div.lead p {
-	color: #666;
+    color: #666;
     line-height: 1.6;
     font-size: 0.75em;
 }
@@ -249,12 +249,12 @@ strong{
 em {
     font-style: italic;
 }
-
-.cursor {
-    color: #000;
-    background: #fff;
+span.balloon {
+    font-size: 0.9em;
 }
-
+span.balloon:before {
+    content: "←";
+}
 
 /**
  * from Rouge
@@ -492,11 +492,3 @@ em {
 .width-080per { width:  80%; }
 .width-090per { width:  90%; }
 .width-100per { width: 100%; }
-
-
-/*
- *  Starter
- */
-.weak {
-  color: #999;
-}
